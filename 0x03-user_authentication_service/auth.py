@@ -46,6 +46,25 @@ class Auth:
             user = self._db.add_user(email, hashed)
             return user
         raise ValueError(f"User {email} already exists")
+      
+    def valid_login(self, email: str, password: str) -> bool:
+        """_summary_
+
+        Args:
+            email (str): _description_
+            password (str): _description_
+
+        Returns:
+            bool: _description_
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            return False
+
+        user_pw = user.hashed_password
+        pw = password.encode("utf-8")
+        return bcrypt.checkpw(pw, user_pw)
 
 
 def _generate_uuid() -> str:
@@ -53,3 +72,4 @@ def _generate_uuid() -> str:
     Generate a uuid and return its string representation
     """
     return str(uuid4())
+
