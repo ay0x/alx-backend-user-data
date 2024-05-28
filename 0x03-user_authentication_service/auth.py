@@ -46,7 +46,7 @@ class Auth:
             user = self._db.add_user(email, hashed)
             return user
         raise ValueError(f"User {email} already exists")
-      
+
     def valid_login(self, email: str, password: str) -> bool:
         """_summary_
 
@@ -72,4 +72,3 @@ def _generate_uuid() -> str:
     Generate a uuid and return its string representation
     """
     return str(uuid4())
-
