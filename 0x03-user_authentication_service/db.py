@@ -6,6 +6,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from user import Base, User
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 
 
 class DB:
@@ -34,12 +36,34 @@ class DB:
 
         Args:
             email (string): User's email address
-            hashed_password (string): _description_
+            hashed_password (string): Hashed password
 
         Returns:
-            User: Created Object
+            User: Created user object
         """
         user = User(email=email, hashed_password=hashed_password)
         self._session.add(user)
         self._session.commit()
         return user
+
+    def find_user_by(self, **kwargs) -> User:
+        """
+        This medthod takes in arbitrary keyword arguments
+        and returns the first row found in the users table
+        as filtered by the method's input arguments
+
+        Raises:
+            InvalidRequestError: When wrong query arguments are passed
+            NoResultFound: When no results are found
+
+        Returns:
+            User: returns the first row found in the users table
+        """
+        all_users = self._session.query(User)
+        for k, v in kwargs.items():
+            if k not in User.__dict__:
+                raise InvalidRequestError
+            for usr in all_users:
+                if getattr(usr, k) == v:
+                    return usr
+        raise NoResultFound
