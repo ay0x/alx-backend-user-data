@@ -47,6 +47,7 @@ class Auth:
             return user
         raise ValueError(f"User {email} already exists")
 
+
 def _generate_uuid() -> str:
     """
     Generate a uuid and return its string representation
