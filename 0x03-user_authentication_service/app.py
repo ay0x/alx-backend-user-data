@@ -34,6 +34,7 @@ def users() -> str:
 
     return jsonify({"email": f"{email}", "message": "user created"})
 
+
 @app.route("/sessions", methods=["POST"], strict_slashes=False)
 def login() -> str:
     """
