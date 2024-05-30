@@ -6,7 +6,11 @@ from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
-from typing import Union
+from typing import Union, TypeVar
+from db import DB
+from user import User
+
+U = TypeVar(User)
 
 
 def _hash_password(password: str) -> bytes:
@@ -99,7 +103,6 @@ class Auth:
             user = self._db.find_user_by(session_id=session_id)
         except NoResultFound:
             return None
-
         return user
 
     def destroy_session(self, user_id: int) -> None:
