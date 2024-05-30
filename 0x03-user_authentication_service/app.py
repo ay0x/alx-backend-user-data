@@ -51,3 +51,16 @@ def login() -> str:
     response = jsonify({"email": f"{email}", "message": "logged in"})
     response.set_cookie("session_id", session_id)
     return response
+
+
+@app.route("/sessions", methods=["DELETE"], strict_slashes=False)
+def logout():
+    """
+    Log out a logged in user and destroy their session
+    """
+    session_id = request.cookies.get("session_id", None)
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is None or session_id is None:
+        abort(403)
+    AUTH.destroy_session(user.id)
+    return redirect("/")
